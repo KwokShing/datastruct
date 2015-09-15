@@ -4,6 +4,12 @@
 
 using namespace std;
 
+void Print(int *arr)
+{
+	for(int i = 0; i < 10; ++i)
+		cout<<arr[i]<<" ";
+	cout<<endl;
+}
 void swap(int *a, int *b)
 {
 	int c;
@@ -25,13 +31,23 @@ void bubble(int *arr, int len)
 				flag = true;
 				newlen = i;
 			}
-			for(int j = 0; j < 10; ++j)
-				cout<<arr[j]<<" ";
-			cout<<endl;
+			Print(arr);
 		}
 	}
 }
 
+void InsertionSort(int *arr, int len)
+{
+	for(int i = 1; i < len; ++i){
+		int tmp = arr[i];
+		int j = i;
+		for(; j > 0 && arr[j-1] > tmp; --j)
+			arr[j] = arr[j-1];
+		arr[j] = tmp;
+		Print(arr);
+	}
+
+}
 
 /*
 void bubble(int *arr, int len)
@@ -56,19 +72,8 @@ void bubble(int *arr, int len)
 }
 */
 
-void print(int *arr)
-{
-	for(int i = 0; i < 10; ++i)
-		cout<<arr[i]<<" ";
-	cout<<endl;
-}
 int main()
 {
-	int a = 1;
-	int b = 2;
-	cout<<a<<" "<<&a<<" "<<b<<" "<<&b<<endl;
-	swap(&a,&b);
-	cout<<a<<" "<<&a<<" "<<b<<" "<<&b<<endl;
 	ifstream in("input");
 	if(!in)
 		return 0;
@@ -81,10 +86,11 @@ int main()
 		arr[count++] = d;
 	}
 	cout<<"------before------"<<endl;
-	print(arr);
+	Print(arr);
 	bubble(arr,10);
+	//InsertionSort(arr,count);
 	cout<<"------after-------"<<endl;
-	print(arr);
+	Print(arr);
 	in.close();
 	return 0;
 }
