@@ -87,8 +87,8 @@ int main()
 	}
 	cout<<"------before------"<<endl;
 	Print(arr);
-	bubble(arr,10);
-	//InsertionSort(arr,count);
+	//bubble(arr,10);
+	InsertionSort(arr,count);
 	cout<<"------after-------"<<endl;
 	Print(arr);
 	in.close();
