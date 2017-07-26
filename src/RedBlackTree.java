@@ -1,5 +1,5 @@
-public class RedBlackTree<T extends Comparable<T>> {
-    private TreeNode<T> root;
+public class RedBlackTree<E extends Comparable<E>> {
+    private TreeNode<E> root;
     private static final boolean RED = false;
     private static final boolean BLACK = true;
 
@@ -33,31 +33,31 @@ public class RedBlackTree<T extends Comparable<T>> {
         root = null;
     }
 
-    public boolean isRED(TreeNode<T> node) {
+    public boolean isRED(TreeNode<E> node) {
         return (node == null || node.color != RED) ? false : true;
     }
 
-    public boolean isBlack(TreeNode<T> node) {
+    public boolean isBlack(TreeNode<E> node) {
         return (node == null || node.color != BLACK) ? false : true;
     }
 
-    public void setColor(TreeNode<T> node, boolean color) {
+    public void setColor(TreeNode<E> node, boolean color) {
         node.color = color;
     }
 
-    public void setRed(TreeNode<T> node) {
+    public void setRed(TreeNode<E> node) {
         node.color = RED;
     }
 
-    public void setBlack(TreeNode<T> node) {
+    public void setBlack(TreeNode<E> node) {
         node.color = BLACK;
     }
 
-    public TreeNode<T> parentOf(TreeNode<T> node) {
+    public TreeNode<E> parentOf(TreeNode<E> node) {
         return node != null ? node.parent : null;
     }
 
-    public void setParent(TreeNode<T> node, TreeNode<T> parent) {
+    public void setParent(TreeNode<E> node, TreeNode<E> parent) {
         node.parent = parent;
     }
 
@@ -65,7 +65,7 @@ public class RedBlackTree<T extends Comparable<T>> {
         preOrderTraverse(root);
     }
 
-    private void preOrderTraverse(TreeNode<T> root) {
+    private void preOrderTraverse(TreeNode<E> root) {
         if (root != null) {
             System.out.print(root + " ");
             preOrderTraverse(root.left);
@@ -77,7 +77,7 @@ public class RedBlackTree<T extends Comparable<T>> {
         inOrderTraverse(root);
     }
 
-    private void inOrderTraverse(TreeNode<T> root) {
+    private void inOrderTraverse(TreeNode<E> root) {
         if (root != null) {
             inOrderTraverse(root.left);
             System.out.print(root + " ");
@@ -89,7 +89,7 @@ public class RedBlackTree<T extends Comparable<T>> {
         postOrderTraverse(root);
     }
 
-    private void postOrderTraverse(TreeNode<T> root) {
+    private void postOrderTraverse(TreeNode<E> root) {
         if (root != null) {
             postOrderTraverse(root.left);
             postOrderTraverse(root.right);
@@ -97,11 +97,11 @@ public class RedBlackTree<T extends Comparable<T>> {
         }
     }
 
-    public TreeNode<T> searchKey(T key) {
+    public TreeNode<E> searchKey(E key) {
         return searchKey(key, root);
     }
 
-    private TreeNode<T> searchKey(T key, TreeNode<T> node) {
+    private TreeNode<E> searchKey(E key, TreeNode<E> node) {
         while (node != null) {
             int cmp = key.compareTo(node.key);
             if (cmp < 0) {
@@ -115,14 +115,14 @@ public class RedBlackTree<T extends Comparable<T>> {
         return null;
     }
 
-    public T findMinVal() {
-        TreeNode<T> res = findMin(root);
+    public E findMinVal() {
+        TreeNode<E> res = findMin(root);
         if (res != null)
             return res.key;
         return null;
     }
 
-    private TreeNode<T> findMin(TreeNode<T> node) {
+    private TreeNode<E> findMin(TreeNode<E> node) {
         if (node == null)
             return null;
         while (node.left != null) {
@@ -131,14 +131,14 @@ public class RedBlackTree<T extends Comparable<T>> {
         return node;
     }
 
-    public T findMaxVal() {
-        TreeNode<T> res = findMax(root);
+    public E findMaxVal() {
+        TreeNode<E> res = findMax(root);
         if (res != null)
             return res.key;
         return null;
     }
 
-    private TreeNode<T> findMax(TreeNode<T> node) {
+    private TreeNode<E> findMax(TreeNode<E> node) {
         if (node == null)
             return null;
         while (node.right != null) {
@@ -147,13 +147,13 @@ public class RedBlackTree<T extends Comparable<T>> {
         return node;
     }
 
-    public TreeNode<T> findSuccessor(TreeNode<T> node) {
+    public TreeNode<E> findSuccessor(TreeNode<E> node) {
         if (node == null)
             return null;
         if (node.right != null)
             return findMin(node.right);
 
-        TreeNode<T> p = node.parent;
+        TreeNode<E> p = node.parent;
         while ((p != null) && (node == p.parent.right)) {
             node = p;
             p = p.parent;
@@ -161,17 +161,65 @@ public class RedBlackTree<T extends Comparable<T>> {
         return p;
     }
 
-    public TreeNode<T> findPredecessor(TreeNode<T> node) {
+    public TreeNode<E> findPredecessor(TreeNode<E> node) {
         if (node == null)
             return null;
         if (node.left != null)
             return findMin(node.left);
 
-        TreeNode<T> p = node.parent;
+        TreeNode<E> p = node.parent;
         while ((p != null) && (node == p.parent.left)) {
             node = p;
             p = p.parent;
         }
         return p;
+    }
+
+    private void leftRotate(TreeNode<E> x) {
+        if (x == null)
+            return;
+        TreeNode<E> y = x.right;
+        TreeNode<E> p = x.parent;
+
+        x.right = y.left;
+        if (y.left != null) {
+            y.left.parent = x;
+        }
+
+        y.parent = p;
+        if (p == null) {
+            root = y;
+        } else if (x == p.left) {
+            p.left = y;
+        } else {
+            p.right = y;
+        }
+
+        y.left = x;
+        x.parent = y;
+    }
+
+    private void rightRotate(TreeNode<E> y) {
+        if (y == null)
+            return;
+        TreeNode<E> x = y.left;
+        TreeNode<E> p = y.parent;
+
+        y.left = x.right;
+        if (x.right != null) {
+            x.right.parent = y;
+        }
+
+        y.parent = p;
+        if (p == null) {
+            root = x;
+        } else if (y == p.left) {
+            p.left = x;
+        } else {
+            p.right = x;
+        }
+
+        x.right = y;
+        y.parent = x;
     }
 }
