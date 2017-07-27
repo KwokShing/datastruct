@@ -256,6 +256,47 @@ public class RedBlackTree<T extends Comparable<T>> {
     }
 
     private void insertAdjust(TreeNode<T> node) {
+        TreeNode<T> parent, grandParent;
+        while((parent = parentOf(node))!=null && isRED(parent)) {
+            grandParent = parentOf(parent);
+            if (parent == grandParent.left) {
+                TreeNode<T> uncle = grandParent.right;
+                if ((uncle != null) && isRED(uncle)) {
+                    setBlack(uncle);
+                    setBlack(parent);
+                    setRed(grandParent);
+                    node = grandParent;
+                    continue;
+                } else if (node == parent.right) {
+                    leftRotate(parent);
+                    TreeNode<T> tmp = parent;
+                    parent = node;
+                    node = tmp;
+                }
 
+                setBlack(parent);
+                setRed(grandParent);
+                rightRotate(grandParent);
+            } else {
+                TreeNode<T> uncle = grandParent.left;
+                if ((uncle != null) && isRED(uncle)) {
+                    setBlack(uncle);
+                    setBlack(parent);
+                    setRed(grandParent);
+                    node = grandParent;
+                    continue;
+                } else if (node == parent.left) {
+                    rightRotate(parent);
+                    TreeNode<T> tmp = parent;
+                    parent = node;
+                    node = tmp;
+                }
+
+                setBlack(parent);
+                setRed(grandParent);
+                leftRotate(grandParent);
+            }
+        }
+        setBlack(root);
     }
 }
