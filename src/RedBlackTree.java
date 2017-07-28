@@ -45,12 +45,20 @@ public class RedBlackTree<T extends Comparable<T>> {
         node.color = color;
     }
 
+    public boolean getColor(TreeNode<T> node) {
+        return node.color;
+    }
+
     public void setRed(TreeNode<T> node) {
         node.color = RED;
     }
 
     public void setBlack(TreeNode<T> node) {
         node.color = BLACK;
+    }
+
+    public void setKey(TreeNode<T> node, T key) {
+        node.key = key;
     }
 
     public TreeNode<T> parentOf(TreeNode<T> node) {
@@ -257,7 +265,7 @@ public class RedBlackTree<T extends Comparable<T>> {
 
     private void insertAdjust(TreeNode<T> node) {
         TreeNode<T> parent, grandParent;
-        while((parent = parentOf(node))!=null && isRED(parent)) {
+        while ((parent = parentOf(node)) != null && isRED(parent)) {
             grandParent = parentOf(parent);
             if (parent == grandParent.left) {
                 TreeNode<T> uncle = grandParent.right;
@@ -298,5 +306,42 @@ public class RedBlackTree<T extends Comparable<T>> {
             }
         }
         setBlack(root);
+    }
+
+    private void remove(TreeNode<T> node) {
+        TreeNode<T> replace = null;
+        TreeNode<T> replace_son = null;
+        if (node.left == null || node.right == null) {
+            replace = node;
+        } else {
+            replace = findPredecessor(node);
+        }
+        if (replace.left != null) {
+            replace_son = replace.left;
+        } else {
+            replace_son = replace.right;
+        }
+        if (replace_son != null) {
+            setParent(replace, parentOf(replace));
+        }
+        if (replace.parent == null) {
+            root = replace_son;
+        } else if (replace == parentOf(replace).left) {
+            parentOf(replace).left = replace_son;
+        } else {
+            parentOf(replace).right = replace_son;
+        }
+        if (replace != node) {
+            setKey(node, replace.getKey());
+        }
+        if (getColor(replace) == BLACK) {
+            removeAdjust(replace_son);
+        }
+        replace = null;
+        return;
+    }
+
+    public void removeAdjust(TreeNode<T> node) {
+
     }
 }
