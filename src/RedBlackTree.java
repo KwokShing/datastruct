@@ -406,4 +406,42 @@ public class RedBlackTree<T extends Comparable<T>> {
             }
         }
     }
+
+    public void remove(T key) {
+        TreeNode<T> node;
+        if ((node = searchKey(key, root)) != null)
+            remove(node);
+    }
+
+
+    private void destroy(TreeNode<T> node) {
+        if (node == null)
+            return;
+        destroy(node.left);
+        destroy(node.right);
+        node = null;
+    }
+
+    public void clear() {
+        destroy(root);
+        root = null;
+    }
+
+    private void print(TreeNode<T> tree, T key, int direction) {
+        if (tree != null) {
+            if (direction == 0)
+                System.out.printf("%2d(B) is root\n", tree.key);
+            else
+                System.out.printf("%2d(%s) is %2d's %6s child\n", tree.key, isRED(tree) ? "R" : "B", key,
+                        direction == 1 ? "right" : "left");
+            print(tree.left, tree.key, -1);
+            print(tree.right, tree.key, 1);
+        }
+    }
+
+    public void print() {
+        if (root != null)
+            print(root, root.key, 0);
+    }
+
 }
