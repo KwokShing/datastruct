@@ -335,13 +335,75 @@ public class RedBlackTree<T extends Comparable<T>> {
             setKey(node, replace.getKey());
         }
         if (getColor(replace) == BLACK) {
-            removeAdjust(replace_son);
+            removeAdjust(replace_son, parentOf(replace));
         }
         replace = null;
         return;
     }
 
-    public void removeAdjust(TreeNode<T> node) {
+    public void removeAdjust(TreeNode<T> node, TreeNode<T> parent) {
+        TreeNode<T> brother = null;
+        while (isBlack(node) && node != root) {
+            if (node == parent.left) {
+                brother = parent.right;
+                // case 1: brother is red
+                if (isRED(brother)) {
+                    setBlack(brother);
+                    setRed(parent);
+                    leftRotate(parent);
+                    brother = parent.right;
+                }
+                // brother is black
 
+                // case 2: both nephews are black
+                if ((brother.left == null || isBlack(brother.left)) && (brother.right == null || isBlack(brother.right))) {
+                    setRed(brother);
+                    node = parent;
+                    parent = parentOf(node);
+                } else {
+                    // case 3: far nephew is black, then near nephew must be red
+                    if (brother.right == null || isBlack(brother.right)) {
+                        setRed(brother);
+                        setBlack(brother.left);
+                        rightRotate(brother);
+                        brother = parent.right;
+                    }
+                    // case 4: far nephew is red, near nephew can be any color
+                    setColor(brother, getColor(parent));
+                    setBlack(parent);
+                    setBlack(brother.right);
+                    leftRotate(parent);
+                    node = root;
+                }
+
+
+            } else {
+                brother = parent.left;
+                if (isRED(brother)) {
+                    setBlack(brother);
+                    setRed(parent);
+                    rightRotate(parent);
+                    brother = parent.left;
+                }
+
+                if ((brother.left == null || isBlack(brother.left)) && (brother.right == null || isBlack(brother.right))) {
+                    setRed(brother);
+                    node = parent;
+                    parent = parentOf(node);
+                } else {
+                    if (brother.left == null || isBlack(brother.left)) {
+                        setRed(brother);
+                        setBlack(brother.right);
+                        leftRotate(brother);
+                        brother = parent.left;
+                    }
+                    setColor(brother, getColor(parent));
+                    setBlack(parent);
+                    setBlack(brother.left);
+                    rightRotate(parent);
+                    node = root;
+                }
+            }
+        }
     }
 }
